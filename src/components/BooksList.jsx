@@ -17,7 +17,7 @@ const url = "http://localhost:3300/books";
 export default function BooksList() {
   let [loading, setLoading] = useState(true);
   const [books, setBooks] = useState([]);
-    let [itemToDelete, setItemToDelete] = useState([]);
+  let [itemToDelete, setItemToDelete] = useState([]);
 
   let getBooks = async () => {
     let response = await fetch(url);
@@ -28,11 +28,14 @@ export default function BooksList() {
   useEffect(() => {
     getBooks();
   }, []);
+  let deleteBooks = (bookID) => {
+    setBooks(books.filter((item) => item._id !== bookID));
+  };
 
   return (
     <Container>
       <Typography align="center" variant="h5">
-              List of Books
+        List of Books
       </Typography>
       <Paper elevation={3}>
         {loading ? (
@@ -40,18 +43,31 @@ export default function BooksList() {
         ) : (
           <List>
             {books.map((book) => (
-                <ListItem key={book.title}>
-                    <ListItemText primary={book.title} secondary={book.author.join(", ")} />
-                    <ListItemIcon onClick={() => setItemToDelete([book._id, book.title])}> <Delete /></ListItemIcon>
-                    <Divider />
+              <ListItem key={book.title}>
+                <ListItemText
+                  primary={book.title}
+                  secondary={book.author.join(", ")}
+                />
+                <ListItemIcon
+                  onClick={() => setItemToDelete([book._id, book.title])}
+                >
+                  {" "}
+                  <Delete style={{ cursor: "pointer" }} />
+                </ListItemIcon>
+                <Divider />
               </ListItem>
             ))}
           </List>
-              )}
-              {itemToDelete.length > 0 && <DeleteConfirmationDialog bookID={itemToDelete[0]} bookTitle={itemToDelete[1]} setItemToDelete={setItemToDelete}/>}
-        </Paper>
-          
-      </Container>
-      
+        )}
+        {itemToDelete.length > 0 && (
+          <DeleteConfirmationDialog
+            bookID={itemToDelete[0]}
+            bookTitle={itemToDelete[1]}
+            setItemToDelete={setItemToDelete}
+            deleteBooks={deleteBooks}
+          />
+        )}
+      </Paper>
+    </Container>
   );
 }
