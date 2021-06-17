@@ -13,11 +13,15 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import { Book, Category, Menu, People } from "@material-ui/icons";
+import { Book, Category, Menu, People, PlayCircleFilledWhiteTwoTone } from "@material-ui/icons";
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import BooksList from "./components/BooksList";
+import Login from "./components/Login";
 import SignUp from "./components/SignUp";
+import CategoryList from "./components/CategoryList";
+import setupInterceptors from "./interceptors";
+import {useHistory} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,10 +36,17 @@ const useStyles = makeStyles((theme) => ({
   list: {
     width: 250,
   },
+  login: {
+    textDecoration: 'none',
+    color: 'white',
+    fontSize: '1.2em',
+  }
 }));
 export default function App() {
+  let history = useHistory();
+  setupInterceptors(history);
   return (
-    <Router>
+    // <Router>
       <Wrapper>
         <Switch>
           <Route exact path="/">
@@ -45,7 +56,7 @@ export default function App() {
             <BooksList />
           </Route>
           <Route exact path="/categories">
-            List of Categories
+            <CategoryList />
           </Route>
           <Route exact path="/members">
             List of Members
@@ -56,9 +67,12 @@ export default function App() {
           <Route exact path="/signup">
             <SignUp/>
           </Route>
+          <Route exact path="/login">
+            <Login/>
+          </Route>
         </Switch>
       </Wrapper>
-    </Router>
+    // </Router>
   );
 }
 function Wrapper(props) {
@@ -83,7 +97,7 @@ function Wrapper(props) {
           <Typography variant="h6" className={classes.title}>
             McLaren College Library
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button><Link to="/login" className={classes.login} color="inherit">Login</Link> </Button>
         </Toolbar>
       </AppBar>
       <React.Fragment>

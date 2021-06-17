@@ -23,29 +23,37 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState("");
+  const [error, setError] = useState("");
 
   let classes = useStyles();
   const signUpUrl = "http://localhost:3300/auth/signup";
   let submitForm = async () => {
     setLoading(true);
-      let formData = new FormData();
-      formData.append("name", userName);
-      formData.append("password", password);
-      formData.append("email", email);
-      
+    let formData = new FormData();
+    formData.append("name", userName);
+    formData.append("password", password);
+    formData.append("email", email);
+    formData.append("profilePic", image);
+
+    for(var pair of formData.entries()) {
+      console.log(pair[0]+ ', '+ pair[1]);
+   }
     await fetch(signUpUrl, {
       method: "POST",
-      body: JSON.stringify({
-        userName,
-        email,
-        password,
-        profilePic: image,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: formData,
+      // headers: {
+      //   "Content-Type": "multipart/form-data",
+      // },
+    }).then((resp)=> resp.json()).then((data) => {
+      setError("");
+      localStorage.setItem("library_access_token", data['access_token']);
+      localStorage.setItem("library_refresh_token", data["refresh_token"]);
+      console.log("access token is: ", localStorage.getItem("library_access_token"));
+      console.log("refresh token is: ", localStorage.getItem("library_refresh_token"));
+    }).catch((err)=> {
+      setError(err);
     });
     // let result = await response.json();
     // console.log(result);
@@ -86,21 +94,21 @@ export default function SignUp() {
         variant="outlined"
       />
       <input
-              accept="image/*"
-              className={classes.input}
-              id="profilePic"
-              type="file"
-              name="profilePic"
-              onChange={(e) => {
-                  console.log(e.target.files);
-                  setImage(e.target.files[0]);
-              }}
+        accept="image/*"
+        className={classes.input}
+        id="profilePic"
+        type="file"
+        name="profilePic"
+        onChange={(e) => {
+          console.log(e.target.files[0]);
+          setImage(e.target.files[0]);
+        }}
       />
       <label htmlFor="profilePic">
         <Button variant="contained" color="primary" component="span">
-                  Upload Avatar
+          Upload Avatar
         </Button>
-              {image.name}
+        {image.name}
       </label>
       <Button
         variant="contained"
@@ -112,6 +120,7 @@ export default function SignUp() {
       >
         Submit
       </Button>
+      {error.length > 0 && <Typography variant="h4">Sign Up</Typography>}
       {/* </form> */}
     </Paper>
   );
