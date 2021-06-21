@@ -14,7 +14,8 @@ import { useEffect, useState } from "react";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import axios from 'axios';
 
-const url = "http://localhost:3300/books";
+// const url = "http://localhost:3300/books";
+const url = "/books";
 export default function BooksList() {
   let [loading, setLoading] = useState(true);
   const [books, setBooks] = useState([]);
@@ -38,17 +39,18 @@ export default function BooksList() {
     // })
       .then((response) => {
         if(response.status === 403){
+          console.log("line 42 response is: ", response);
           throw response;
         }else {
-          console.log("reached line 42");
+          console.log("reached line 45");
         setError("");
         setBooks(response.data);
         setLoading(false);
       }})
       .catch((err) => {
-        console.log("error block of get-books executed: ", err.statusText);
+        console.log("error block of get-books executed: ", err);
         setLoading(false);
-        setError(err.statusText);
+        setError(err.message);
       });
   };
   useEffect(() => {
