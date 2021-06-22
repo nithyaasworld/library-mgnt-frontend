@@ -54,11 +54,11 @@ export default function setupInterceptors(history) {
                     resp.data.access_token
                   );
                   console.log(localStorage.getItem("library_access_token"))
-                  // });
-              return axios(originalRequest);
+                  // }
             }
           })
         }
+        return axios(originalRequest);
       }
       return Promise.reject(error);
     }
