@@ -25,26 +25,33 @@ export default function Login() {
 
   const loginUrl = "http://localhost:3300/auth/login";
   const onFormSubmit = async () => {
-    await fetch(loginUrl, {
+   let response =  await fetch(loginUrl, {
       method: "post",
       body: JSON.stringify({
         email,
         password,
       }),
       headers: { "Content-Type": "application/json" },
-    })
-      .then((resp) => resp.json()).then((data) => {
+   })
+   .catch((err) => {
+     console.log("error", err);
+     setError(err.message);
+   });
+    console.log(response.status);
+    if (response.status === 400) {
+      setError("Please check email/password");
+      return;
+    }
+    
+    let data = await response.json();
+      // .then((resp) => ({ data: resp.json(), status: resp.status })).then((data) => {
         setError("");
         localStorage.setItem("library_access_token", data["access_token"]); 
         localStorage.setItem("library_refresh_token", data["refresh_token"]);
         console.log("access token is: ", localStorage.getItem("library_access_token"));
-        console.log("refresh token is: ", localStorage.getItem("library_refresh_token"));
+        // console.log("refresh token is: ", localStorage.getItem("library_refresh_token"));
         window.location.href = "http://localhost:3000/books";
-      })
-      .catch((err) => {
-        console.log("error", err);
-        setError(err.message);
-      });
+      // })
   };
   return (
     <Paper elevation={2} className={classes.container}>

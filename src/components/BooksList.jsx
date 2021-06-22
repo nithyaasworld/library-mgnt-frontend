@@ -30,13 +30,18 @@ export default function BooksList() {
     // let data = await response.json();
     // setBooks(data);
     // setLoading(false);
-    await axios.get(url)
+
+    // let response = await axios.get(url);
+    // setBooks(response.data);
+    // setLoading(false);
+
     // await fetch(url, {
     //   headers: {
     //     "Content-Type": "application/json",
     //     "Authorization": "Bearer " + localStorage.getItem("libraryJWT"),
     //   },
     // })
+   await axios.get(url)
       .then((response) => {
         if(response.status === 403){
           console.log("line 42 response is: ", response);

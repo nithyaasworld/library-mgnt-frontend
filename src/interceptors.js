@@ -28,34 +28,36 @@ export default function setupInterceptors(history) {
       console.log("Error", error.response.status);
       let { status } = error.response;
       const originalRequest = error.config;
-      if (status === 403) {
+      if (status === 403 && !error.config._retry ) {
         if (localStorage.getItem("library_refresh_token")) {
           let refreshToken = localStorage.getItem("library_refresh_token");
           let decoded = jwt_decode(refreshToken);
           console.log("decoded is: ", decoded);
-          await fetch("http://localhost:3300/auth/token", {
-            method: "post",
+          await axios.post("/auth/token", {
+
+          // await fetch("http://localhost:3300/auth/token", {
+            // method: "post",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email: decoded.email, token: refreshToken }),
+            _retry: true,
           }).then(async (resp) => {
             if (resp.status === 403 || resp.status === 401) {
               console.log("I am here");
               history.replace("/login");
             } else if (resp.status === 201) {
-              //TODO
               console.log("received new tokens I guess");
-               await resp
-                .json()
-                .then((result) =>{
+              console.log(resp.data);
+              // let result = await resp.json();
+                // .then((result) =>{
                   localStorage.setItem(
                     "library_access_token",
-                    result["access_token"]
+                    resp.data.access_token
                   );
                   console.log(localStorage.getItem("library_access_token"))
-                  });
+                  // });
               return axios(originalRequest);
             }
-          });
+          })
         }
       }
       return Promise.reject(error);

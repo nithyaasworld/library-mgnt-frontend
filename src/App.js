@@ -47,31 +47,31 @@ export default function App() {
   setupInterceptors(history);
   return (
     // <Router>
-      <Wrapper>
-        <Switch>
-          <Route exact path="/">
-            Welcome to Library
-          </Route>
-          <Route exact path="/books">
-            <BooksList />
-          </Route>
-          <Route exact path="/categories">
-            <CategoryList />
-          </Route>
-          <Route exact path="/members">
-            List of Members
-          </Route>
-          <Route exact path="/issues">
-            List of Issued Books
-          </Route>
-          <Route exact path="/signup">
-            <SignUp/>
-          </Route>
-          <Route exact path="/login">
-            <Login/>
-          </Route>
-        </Switch>
-      </Wrapper>
+    <Wrapper>
+      <Switch>
+        <Route exact path="/">
+          Welcome to Library
+        </Route>
+        <Route exact path="/books">
+          <BooksList />
+        </Route>
+        <Route exact path="/categories">
+          <CategoryList />
+        </Route>
+        <Route exact path="/members">
+          List of Members
+        </Route>
+        <Route exact path="/issues">
+          List of Issued Books
+        </Route>
+        <Route exact path="/signup">
+          <SignUp />
+        </Route>
+        <Route exact path="/login">
+          <Login />
+        </Route>
+      </Switch>
+    </Wrapper>
     // </Router>
   );
 }
